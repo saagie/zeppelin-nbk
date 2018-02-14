@@ -19,7 +19,7 @@ fi
 
 # Create Zeppelin conf
 #FIXME: do not hard code
-echo "export MASTER= mesos://zk://zk1:2181,zk2:2181,zk3:2181,zk4:2181,zk5:2181,zk6:2181,zk7:2181/mesos" > /zeppelin/conf/zeppelin-env.sh
+echo "export MASTER=mesos://zk://zk1:2181,zk2:2181,zk3:2181,zk4:2181,zk5:2181,zk6:2181,zk7:2181/mesos" > /zeppelin/conf/zeppelin-env.sh
 
 # Run Zeppelin
 echo "Running Apache Zeppelin..."

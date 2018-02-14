@@ -10,6 +10,18 @@ RUN cd /tmp && tar -xzf spark-2.1.0-bin-hadoop2.6.tgz && \
   mkdir -p /usr/local/spark/2.1.0 && mv spark-2.1.0-bin-hadoop2.6/* /usr/local/spark/2.1.0 && \
   rm -rf spark-2.1.0-bin-hadoop2.6.tgz spark-2.1.0-bin-hadoop2.6
 
+# Install Mesos 1.3.1
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF && \
+  DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]') && \
+  CODENAME=$(lsb_release -cs) && \
+  echo "deb http://repos.mesosphere.com/${DISTRO} ${CODENAME} main" | tee /etc/apt/sources.list.d/mesosphere.list && \
+  apt-get -y update && \
+  apt-get install -y --no-install-recommends mesos=1.3.1-2.0.1 && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
+
+ENV MESOS_NATIVE_JAVA_LIBRARY /usr/lib/libmesos-1.3.1.so
+
 # Set Spark 2.1.0 as the default one
 ENV SPARK_HOME /usr/local/spark/2.1.0
 ENV APACHE_SPARK_VERSION 2.1.0
