@@ -12,8 +12,10 @@ RUN cd /tmp && tar -xzf spark-2.1.0-bin-hadoop2.6.tgz && \
 
 # Set Spark 2.1.0 as the default one
 ENV SPARK_HOME /usr/local/spark/2.1.0
+ENV APACHE_SPARK_VERSION 2.1.0
 
 # Set Hadoop default conf dir
+ENV HADOOP_HOME /etc/hadoop
 ENV HADOOP_CONF_DIR /etc/hadoop/conf
 
 # Set Hive default conf dir
@@ -25,6 +27,9 @@ ENV ZEPPELIN_NOTEBOOK_DIR '/notebook'
 # Add a startup script that will setup Spark conf before running Zeppelin
 ADD saagie-zeppelin.sh /zeppelin
 RUN chmod 744 /zeppelin/saagie-zeppelin.sh
+
+# Turn Zeppelin log level to DEBUG:
+RUN sed -i -e 's/INFO/DEBUG/g' /zeppelin/conf/log4j.properties
 
 # Keep default ENTRYPOINT as apache/zeppelin is using Tini, which is great.
 CMD ["/zeppelin/saagie-zeppelin.sh"]
