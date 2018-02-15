@@ -31,8 +31,12 @@ if [ -z $PORT ]
 then
   echo "WARNING: no port given. Zeppelin will run on default port."
 else
-  # Set the PORT0 variable used in spark-env.sh
-  export PORT0=$(( $PORT+1 ))
+  # If not already set, set a fake PORT0 variable (used in spark-env.sh)
+  if [ -z $PORT0 ]
+  then
+    export PORT0=$(( $PORT+1 ))
+    echo "WARNING: no PORT0 environment variable provided. $PORT0 will be used..."
+  fi
   echo "export ZEPPELIN_PORT=$PORT" >> /zeppelin/conf/zeppelin-env.sh
 fi
 
@@ -53,8 +57,6 @@ then
   echo "INFO: ovewriting default spark-env.sh"
   cp /usr/local/spark/conf/spark-env.sh /usr/local/spark/2.1.0/conf
   chmod 755 /usr/local/spark/2.1.0/conf/spark-env.sh
-  #FIXME: Spark UI hard coded port
-  # sed -i -e 's/\$PORT0/12121/g' /usr/local/spark/2.1.0/conf/spark-env.sh
 else
   # use default config
   echo "WARNING: NO CUSTOM spark-env.sh PROVIDED. USING DEFAULT TEMPLATE."
@@ -62,8 +64,22 @@ else
 fi
 
 # Create Zeppelin conf
-#FIXME: do not hard code
-echo "export MASTER=mesos://zk://zk1:2181,zk2:2181,zk3:2181,zk4:2181,zk5:2181,zk6:2181,zk7:2181/mesos" >> /zeppelin/conf/zeppelin-env.sh
+if [ -f "/tmp/spark-defaults.conf" ]
+then
+  MASTER=`grep spark.master /tmp/spark-defaults.conf | sed "s/spark.master\s*//g"`
+
+  if [ -z $MASTER ]
+  then
+    echo "WARNING: unable to find spark.master in /tmp/spark-defaults.conf. Using default in-memory Spark."
+    unset SPARK_HOME
+  else
+    echo "INFO: Using the following Spark master: $MASTER"
+    echo "export MASTER=$MASTER" >> /zeppelin/conf/zeppelin-env.sh
+  fi
+else
+  echo "WARNING: no spark-default.conf provided. Using default in-memory Spark."
+  unset SPARK_HOME
+fi
 
 # Run Zeppelin
 echo "Running Apache Zeppelin..."
