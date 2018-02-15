@@ -40,5 +40,8 @@ ENV ZEPPELIN_NOTEBOOK_DIR '/notebook'
 ADD saagie-zeppelin.sh /zeppelin
 RUN chmod 744 /zeppelin/saagie-zeppelin.sh
 
+# Set Saagie's cluster Java version
+ENV JAVA_VERSION 8.131
+
 # Keep default ENTRYPOINT as apache/zeppelin is using Tini, which is great.
 CMD ["/zeppelin/saagie-zeppelin.sh"]
