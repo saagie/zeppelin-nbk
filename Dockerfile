@@ -40,8 +40,5 @@ ENV ZEPPELIN_NOTEBOOK_DIR '/notebook'
 ADD saagie-zeppelin.sh /zeppelin
 RUN chmod 744 /zeppelin/saagie-zeppelin.sh
 
-# Turn Zeppelin log level to DEBUG:
-RUN sed -i -e 's/INFO/DEBUG/g' /zeppelin/conf/log4j.properties
-
 # Keep default ENTRYPOINT as apache/zeppelin is using Tini, which is great.
 CMD ["/zeppelin/saagie-zeppelin.sh"]
