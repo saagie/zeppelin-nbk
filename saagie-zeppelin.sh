@@ -30,6 +30,7 @@ echo "" > /zeppelin/conf/zeppelin-env.sh
 if [ -z $PORT ]
 then
   echo "WARNING: no port given. Zeppelin will run on default port."
+  export PORT0=8080
 else
   # If not already set, set a fake PORT0 variable (used in spark-env.sh)
   if [ -z $PORT0 ]
@@ -80,6 +81,9 @@ else
   echo "WARNING: no spark-default.conf provided. Using default in-memory Spark."
   unset SPARK_HOME
 fi
+
+# Run another script to upgrade Spark interpreter config after Zeppelin boot
+/zeppelin/saagie-zeppelin-config.sh &
 
 # Run Zeppelin
 echo "Running Apache Zeppelin..."

@@ -16,8 +16,13 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF && \
   CODENAME=$(lsb_release -cs) && \
   echo "deb http://repos.mesosphere.com/${DISTRO} ${CODENAME} main" | tee /etc/apt/sources.list.d/mesosphere.list && \
   apt-get -y update && \
-  apt-get install -y --no-install-recommends mesos=1.3.1-2.0.1 && \
-  apt-get clean && \
+  apt-get install -y --no-install-recommends mesos=1.3.1-2.0.1
+
+# Install jq
+RUN apt-get install -y jq
+
+# Clean
+RUN apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
 ENV MESOS_NATIVE_JAVA_LIBRARY /usr/lib/libmesos-1.3.1.so
@@ -38,7 +43,8 @@ ENV ZEPPELIN_NOTEBOOK_DIR '/notebook'
 
 # Add a startup script that will setup Spark conf before running Zeppelin
 ADD saagie-zeppelin.sh /zeppelin
-RUN chmod 744 /zeppelin/saagie-zeppelin.sh
+ADD saagie-zeppelin-config.sh /zeppelin
+RUN chmod 744 /zeppelin/saagie-zeppelin.sh /zeppelin/saagie-zeppelin-config.sh
 
 # Set Saagie's cluster Java version
 ENV JAVA_VERSION 8.131
