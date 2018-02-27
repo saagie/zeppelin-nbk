@@ -25,8 +25,6 @@ then
   then
     ZEPPELIN_SERVER_CONTEXT_PATH=''
   fi
-  echo "DEBUG: sending the following JSON to http://localhost:$PORT0$ZEPPELIN_SERVER_CONTEXT_PATH/api/interpreter/setting/$interpreterId :"
-  echo "$json"
   curl -v -X PUT -H "Content-Type: application/json" -d "$json" "http://localhost:$PORT0$ZEPPELIN_SERVER_CONTEXT_PATH/api/interpreter/setting/$interpreterId"
 
 else
