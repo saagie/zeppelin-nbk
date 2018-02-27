@@ -20,7 +20,13 @@ then
   # build the JSON to send to Zeppelin API to update the Spark interpreter config
   json="{\"option\":$updatedOption, \"properties\":$properties, \"dependencies:\":$dependencies}"
 
-  curl -X PUT -H "Content-Type: application/json" -d "$json" "http://localhost:$PORT0/api/interpreter/setting/$interpreterId"
+  # Use notebook base url (if it has been changed) when requesting its API.
+  if [ -z $ZEPPELIN_SERVER_CONTEXT_PATH ]
+  then
+    ZEPPELIN_SERVER_CONTEXT_PATH=''
+  fi
+  curl -v -X PUT -H "Content-Type: application/json" -d "$json" "http://localhost:$PORT0$ZEPPELIN_SERVER_CONTEXT_PATH/api/interpreter/setting/$interpreterId"
+
 else
   echo "WARNING: no Interpreter config found. Zeppelin interpreters will run with default config."
 fi
