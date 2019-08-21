@@ -49,5 +49,12 @@ RUN chmod 744 /zeppelin/saagie-zeppelin.sh /zeppelin/saagie-zeppelin-config.sh
 # Set Saagie's cluster Java version
 ENV JAVA_VERSION 8.131
 
+# Install vim
+RUN apt-get update
+RUN apt-get -y install vim
+
+# Add CRON to copy interpreter.json to persisted folder
+RUN crontab < <(crontab -l ; echo "* * * * * cp -f /zeppelin/conf/interpreter.json /notebook/")
+
 # Keep default ENTRYPOINT as apache/zeppelin is using Tini, which is great.
 CMD ["/zeppelin/saagie-zeppelin.sh"]
