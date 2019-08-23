@@ -91,6 +91,9 @@ then
   cp -f /notebook/interpreter.json /zeppelin/conf/interpreter.json
 fi
 
+#Launch cron
+cron
+
 # Run Zeppelin
 echo "Running Apache Zeppelin..."
 /zeppelin/bin/zeppelin.sh

@@ -54,7 +54,9 @@ RUN apt-get update
 RUN apt-get -y install vim
 
 # Add CRON to copy interpreter.json to persisted folder
-RUN (crontab -l && echo "* * * * * cp -f /zeppelin/conf/interpreter.json /notebook/") | crontab -
+RUN echo "* * * * * cp -f /zeppelin/conf/interpreter.json /notebook/" >> mycron && \
+crontab mycron && \
+rm mycron
 
 # Keep default ENTRYPOINT as apache/zeppelin is using Tini, which is great.
 CMD ["/zeppelin/saagie-zeppelin.sh"]
