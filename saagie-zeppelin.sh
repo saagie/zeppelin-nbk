@@ -85,6 +85,15 @@ fi
 # Run another script to upgrade Spark interpreter config after Zeppelin boot
 /zeppelin/saagie-zeppelin-config.sh &
 
+# Copy interpreter.json from persisted folder if exists
+if [ -f "/notebook/interpreter.json" ]
+then
+  cp -f /notebook/interpreter.json /zeppelin/conf/interpreter.json
+fi
+
+#Launch cron
+cron
+
 # Run Zeppelin
 echo "Running Apache Zeppelin..."
 /zeppelin/bin/zeppelin.sh
