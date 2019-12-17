@@ -53,6 +53,11 @@ ENV JAVA_VERSION 8.131
 RUN apt-get update
 RUN apt-get -y install vim
 
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt update -qq && apt install -yqq --no-install-recommends \
+      krb5-user && \
+    rm -rf /var/lib/apt/lists/*;
+
 # Add CRON to copy interpreter.json to persisted folder
 RUN echo "* * * * * cp -f /zeppelin/conf/interpreter.json /notebook/" >> mycron && \
 crontab mycron && \
