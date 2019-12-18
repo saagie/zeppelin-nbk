@@ -2,13 +2,13 @@ FROM apache/zeppelin:0.8.1
 
 MAINTAINER Saagie
 
-# Install Spark 2.1.0 for Hadoop 2.6
-RUN cd /tmp && wget https://archive.apache.org/dist/spark/spark-2.1.0/spark-2.1.0-bin-hadoop2.6.tgz -O /tmp/spark-2.1.0-bin-hadoop2.6.tgz
+# Install Spark 2.3.4
+RUN cd /tmp && wget https://archive.apache.org/dist/spark/spark-2.3.4/spark-2.3.4-bin-hadoop2.6.tgz -O /tmp/spark-2.3.4-bin-hadoop2.6.tgz
 
-RUN cd /tmp && tar -xzf spark-2.1.0-bin-hadoop2.6.tgz && \
-  cp spark-2.1.0-bin-hadoop2.6/conf/log4j.properties.template spark-2.1.0-bin-hadoop2.6/conf/log4j.properties && \
-  mkdir -p /usr/local/spark/2.1.0 && mv spark-2.1.0-bin-hadoop2.6/* /usr/local/spark/2.1.0 && \
-  rm -rf spark-2.1.0-bin-hadoop2.6.tgz spark-2.1.0-bin-hadoop2.6
+RUN cd /tmp && tar -xzf spark-2.3.4-bin-hadoop2.6.tgz && \
+  cp spark-2.3.4-bin-hadoop2.6/conf/log4j.properties.template spark-2.3.4-bin-hadoop2.6/conf/log4j.properties && \
+  mkdir -p /usr/local/spark/2.3.4 && mv spark-2.3.4-bin-hadoop2.6/* /usr/local/spark/2.3.4 && \
+  rm -rf spark-2.3.4-bin-hadoop2.6.tgz spark-2.3.4-bin-hadoop2.6
 
 # Install Mesos 1.3.1
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF && \
@@ -27,9 +27,9 @@ RUN apt-get clean && \
 
 ENV MESOS_NATIVE_JAVA_LIBRARY /usr/lib/libmesos-1.3.1.so
 
-# Set Spark 2.1.0 as the default one
-ENV SPARK_HOME /usr/local/spark/2.1.0
-ENV APACHE_SPARK_VERSION 2.1.0
+# Set Spark 2.3.4 as the default one
+ENV SPARK_HOME /usr/local/spark/2.3.4
+ENV APACHE_SPARK_VERSION 2.3.4
 
 # Set Hadoop default conf dir
 ENV HADOOP_HOME /etc/hadoop

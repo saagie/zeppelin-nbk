@@ -54,14 +54,14 @@ fi
 # before running Zepplin
 if [ -f "/usr/local/spark/conf/spark-env.sh" ]
 then
-  # overwrite Spark 2.1.0 config
+  # overwrite Spark 2.3.4 config
   echo "INFO: ovewriting default spark-env.sh"
-  cp /usr/local/spark/conf/spark-env.sh /usr/local/spark/2.1.0/conf
-  chmod 755 /usr/local/spark/2.1.0/conf/spark-env.sh
+  cp /usr/local/spark/conf/spark-env.sh /usr/local/spark/2.3.4/conf
+  chmod 755 /usr/local/spark/2.3.4/conf/spark-env.sh
 else
   # use default config
   echo "WARNING: NO CUSTOM spark-env.sh PROVIDED. USING DEFAULT TEMPLATE."
-  cp /usr/local/spark/2.1.0/conf/spark-env.sh.template /usr/local/spark/2.1.0/conf/spark-env.sh
+  cp /usr/local/spark/2.3.4/conf/spark-env.sh.template /usr/local/spark/2.3.4/conf/spark-env.sh
 fi
 
 # Create Zeppelin conf
@@ -79,8 +79,11 @@ then
   fi
 else
   echo "WARNING: no spark-default.conf provided. Using default in-memory Spark."
-  unset SPARK_HOME
+  echo "Use SPARK_HOME=$SPARK_HOME"
+  echo "export SPARK_HOME=$SPARK_HOME" >> /zeppelin/conf/zeppelin-env.sh
 fi
+
+
 
 # Run another script to upgrade Spark interpreter config after Zeppelin boot
 /zeppelin/saagie-zeppelin-config.sh &
