@@ -22,7 +22,7 @@ This container can run without any configuration on Saagie's platform.
 
 If you want to run it with an in-memory Spark, just run:
 ```
-docker run -it --rm --name zeppelin -p 8080:8080 saagie/zeppelin:sp1.12.1-mesos1.3.1-spark2.3.4
+docker run -it --rm --name zeppelin -p 8080:8080 saagie/zeppelin:sp1.12.1-mesos1.3.1-spark2.4.5
 ```
 
  If you want to run it locally but pointing to a remote Spark cluster, run:
@@ -33,7 +33,7 @@ docker run -it --rm --name zeppelin --net=host -e PORT0=[ZEPPELIN_PORT] \
   -v $(pwd)/conf/hadoop/:/etc/hadoop/conf/ \
   -v $(pwd)/conf/spark/spark-env.sh:/usr/local/spark/conf/spark-env.sh \
   -v $(pwd)/conf/spark/spark-defaults.conf:/tmp/spark-defaults.conf \
-  saagie/zeppelin:sp1.12.1-mesos1.3.1-spark2.3.4 /zeppelin/saagie-zeppelin.sh -d DEBUG --port [ZEPPELIN_PORT]
+  saagie/zeppelin:sp1.12.1-mesos1.3.1-spark2.4.5 /zeppelin/saagie-zeppelin.sh -d DEBUG --port [ZEPPELIN_PORT]
 ```
 
 The given volumes contain Hive, Hadoop, and Spark configuration files of your remote cluster.
