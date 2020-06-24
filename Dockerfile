@@ -2,6 +2,9 @@ FROM apache/zeppelin:0.8.1
 
 MAINTAINER Saagie
 
+ENV DEBIAN_FRONTEND noninteractive
+
+
 # Install Spark 2.3.4
 RUN cd /tmp && wget https://archive.apache.org/dist/spark/spark-2.3.4/spark-2.3.4-bin-hadoop2.6.tgz -O /tmp/spark-2.3.4-bin-hadoop2.6.tgz
 
@@ -53,7 +56,6 @@ ENV JAVA_VERSION 8.131
 RUN apt-get update
 RUN apt-get -y install vim
 
-ENV DEBIAN_FRONTEND noninteractive
 RUN apt update -qq && apt install -yqq --no-install-recommends \
       krb5-user && \
     rm -rf /var/lib/apt/lists/*;
