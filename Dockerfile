@@ -1,4 +1,4 @@
-FROM apache/zeppelin:0.8.1
+FROM apache/zeppelin:0.9.0
 
 MAINTAINER Saagie
 
@@ -25,12 +25,14 @@ ENV ZEPPELIN_INTP_CLASSPATH_OVERRIDES /etc/hive/conf
 # Default notebooks directory
 ENV ZEPPELIN_NOTEBOOK_DIR '/notebook'
 
+
 ########################## LIBS PART BEGIN ##########################
 RUN apt-get update -qq && apt-get install -yqq --no-install-recommends \
       jq \
       vim \
     && rm -rf /var/lib/apt/lists/*
 ########################## LIBS PART END ##########################
+
 
 ########################## Install Spark BEGIN ##########################
 # Install Spark ${APACHE_SPARK_VERSION}
@@ -40,6 +42,7 @@ RUN cd /tmp && tar -xzf spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION
   mkdir -p /usr/local/spark/${APACHE_SPARK_VERSION} && mv spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}/* /usr/local/spark/${APACHE_SPARK_VERSION} && \
   rm -rf spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}
 ########################## Install Spark END ##########################
+
 
 ########################## Install MESOS BEGIN ##########################
 # Install Mesos ${MESOS_VERSION}
@@ -52,11 +55,13 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF && \
   && rm -rf /var/lib/apt/lists/*
 ########################## Install MESOS END ##########################
 
+
 ########################## Install Kerberos Client BEGIN ##########################
 RUN apt update -qq && apt install -yqq --no-install-recommends \
       krb5-user && \
     rm -rf /var/lib/apt/lists/*;
 ########################## Install Kerberos Client END ##########################
+
 
 # Add a startup script that will setup Spark conf before running Zeppelin
 ADD saagie-zeppelin.sh /zeppelin
