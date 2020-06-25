@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# As we sould run this container in HOST mode to be able to access the Spark cluster,
+# As we should run this container in HOST mode to be able to access the Spark cluster,
 # we need to parse arguments to get a port on which to run Zeppelin.
 # If no port provided, let it run on default port (8080)
 # If you want to change Zeppelin log level,
