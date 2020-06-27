@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Set Saagie's cluster Java version
 ENV JAVA_VERSION 8.131
-ENV APACHE_SPARK_VERSION 2.3.4
+ENV APACHE_SPARK_VERSION 2.4.5
 ENV HADOOP_VERSION 2.6
 
 # Set Hadoop default conf dir
@@ -24,12 +24,7 @@ ENV ZEPPELIN_RUN_MODE local
 
 ########################## LIBS PART BEGIN ##########################
 USER root
-# FIXME Remove once apache/zeppelin image will include PR :
-# https://github.com/apache/zeppelin/pull/3755
-# correcting issue :  https://issues.apache.org/jira/browse/ZEPPELIN-4783
-# and once docker image will be rebuild
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9 && \
-    apt-get update -qq && apt-get install -yqq --no-install-recommends \
+RUN apt-get update -qq && apt-get install -yqq --no-install-recommends \
       jq \
       vim \
       krb5-user \
@@ -53,14 +48,11 @@ ADD saagie-zeppelin-config.sh /zeppelin
 RUN chmod 744 /zeppelin/saagie-zeppelin.sh /zeppelin/saagie-zeppelin-config.sh
 
 RUN mkdir ${ZEPPELIN_NOTEBOOK_DIR}
-# && chown -R 1000 ${ZEPPELIN_NOTEBOOK_DIR}
 
 # Add CRON to copy interpreter.json to persisted folder
 RUN echo "* * * * * cp -f /zeppelin/conf/interpreter.json ${ZEPPELIN_NOTEBOOK_DIR}/" >> mycron && \
 crontab mycron && \
 rm mycron
-
-# USER 1000
 
 # Keep default ENTRYPOINT as apache/zeppelin is using Tini, which is great.
 CMD ["/zeppelin/saagie-zeppelin.sh"]
