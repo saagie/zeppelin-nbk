@@ -20,7 +20,7 @@ ENV SPARK_HOME /usr/local/spark/${APACHE_SPARK_VERSION}
 ENV ZEPPELIN_INTP_CLASSPATH_OVERRIDES /etc/hive/conf
 # Default notebooks directory
 ENV ZEPPELIN_NOTEBOOK_DIR '/notebook'
-
+ENV ZEPPELIN_RUN_MODE local
 
 ########################## LIBS PART BEGIN ##########################
 USER root
@@ -32,6 +32,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9 &&
     apt-get update -qq && apt-get install -yqq --no-install-recommends \
       jq \
       vim \
+      krb5-user \
     && rm -rf /var/lib/apt/lists/*
 ########################## LIBS PART END ##########################
 
@@ -46,38 +47,20 @@ RUN cd /tmp && tar -xzf spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION
 ########################## Install Spark END ##########################
 
 
-########################## Install MESOS BEGIN ##########################
-# Install Mesos ${MESOS_VERSION}
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF && \
-  DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]') && \
-  CODENAME=$(lsb_release -cs) && \
-  echo "deb http://repos.mesosphere.com/${DISTRO} ${CODENAME} main" | tee /etc/apt/sources.list.d/mesosphere.list && \
-  apt-get -y update && \
-  apt-get install -y --no-install-recommends mesos=${MESOS_VERSION}-${MESOS_VERSION2} \
-  && rm -rf /var/lib/apt/lists/*
-########################## Install MESOS END ##########################
-
-
-########################## Install Kerberos Client BEGIN ##########################
-RUN apt update -qq && apt install -yqq --no-install-recommends \
-      krb5-user && \
-    rm -rf /var/lib/apt/lists/*;
-########################## Install Kerberos Client END ##########################
-
-
 # Add a startup script that will setup Spark conf before running Zeppelin
 ADD saagie-zeppelin.sh /zeppelin
 ADD saagie-zeppelin-config.sh /zeppelin
 RUN chmod 744 /zeppelin/saagie-zeppelin.sh /zeppelin/saagie-zeppelin-config.sh
 
-RUN mkdir ${ZEPPELIN_NOTEBOOK_DIR} && chown -R 1000 ${ZEPPELIN_NOTEBOOK_DIR}
-
-USER 1000
+RUN mkdir ${ZEPPELIN_NOTEBOOK_DIR}
+# && chown -R 1000 ${ZEPPELIN_NOTEBOOK_DIR}
 
 # Add CRON to copy interpreter.json to persisted folder
 RUN echo "* * * * * cp -f /zeppelin/conf/interpreter.json ${ZEPPELIN_NOTEBOOK_DIR}/" >> mycron && \
 crontab mycron && \
 rm mycron
+
+# USER 1000
 
 # Keep default ENTRYPOINT as apache/zeppelin is using Tini, which is great.
 CMD ["/zeppelin/saagie-zeppelin.sh"]
