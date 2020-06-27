@@ -7,33 +7,29 @@ It adds some specific library versions used on Saagie's platform (such as Spark 
 
 Run the following command:
 ```
-docker build -t saagie/zeppelin:sp[saagie-platform-min-version]-mesos[mesos-version]-spark[spark-version] .
+docker build --no-cache -t saagie/zeppelin-nbk:v2 .
 ```
-
-Where you need to provide:
-- the minimum Saagie platform version with which this Zeppelin image is compatible.
-- the mesos version currently running on your Saagie platform
-- the most recent spark version available on your Saagie platform
-
 
 ## Run a container
 
-This container can run without any configuration on Saagie's platform.
+This container can run on Saagie's platform.
 
-If you want to run it with an in-memory Spark, just run:
+You need to define :
+ - the port 8080
+ - the base path variable : $ZEPPELIN_SERVER_CONTEXT_PATH
+ - no rewrite URL                           
+
+You can also attach a volume on /notebook to persist your Notebooks.
+ 
+
+If you want to run it locally with an in-memory Spark, just run:
 ```
-docker run -it --rm --name zeppelin -p 8080:8080 saagie/zeppelin:sp1.12.1-mesos1.3.1-spark2.4.5
+docker run -it --rm --name zeppelin -p 8080:8080 saagie/zeppelin-nbk:v2
 ```
 
  If you want to run it locally but pointing to a remote Spark cluster, run:
 ```
-docker run -it --rm --name zeppelin --net=host -e PORT0=[ZEPPELIN_PORT] \
-  -v $(pwd)/notebook/:/notebook/ \
-  -v $(pwd)/conf/hive/hive-site.xml:/etc/hive/conf/hive-site.xml \
-  -v $(pwd)/conf/hadoop/:/etc/hadoop/conf/ \
-  -v $(pwd)/conf/spark/spark-env.sh:/usr/local/spark/conf/spark-env.sh \
-  -v $(pwd)/conf/spark/spark-defaults.conf:/tmp/spark-defaults.conf \
-  saagie/zeppelin:sp1.12.1-mesos1.3.1-spark2.4.5 /zeppelin/saagie-zeppelin.sh -d DEBUG --port [ZEPPELIN_PORT]
+TO BE COMPLETED
 ```
 
 The given volumes contain Hive, Hadoop, and Spark configuration files of your remote cluster.
