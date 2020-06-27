@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# As we sould run this container in HOST mode to be able to access the Spark cluster,
+# As we should run this container in HOST mode to be able to access the Spark cluster,
 # we need to parse arguments to get a port on which to run Zeppelin.
 # If no port provided, let it run on default port (8080)
 # If you want to change Zeppelin log level,
@@ -54,14 +54,14 @@ fi
 # before running Zepplin
 if [ -f "/usr/local/spark/conf/spark-env.sh" ]
 then
-  # overwrite Spark config
+  # overwrite Spark current config
   echo "INFO: ovewriting default spark-env.sh"
-  cp /usr/local/spark/conf/spark-env.sh /usr/local/spark/${SPARK_VERSION}/conf
-  chmod 755 /usr/local/spark/${SPARK_VERSION}/conf/spark-env.sh
+  cp /usr/local/spark/conf/spark-env.sh ${SPARK_HOME}/conf
+  chmod 755 ${SPARK_HOME}/conf/spark-env.sh
 else
   # use default config
   echo "WARNING: NO CUSTOM spark-env.sh PROVIDED. USING DEFAULT TEMPLATE."
-  cp /usr/local/spark/${SPARK_VERSION}/conf/spark-env.sh.template /usr/local/spark/${SPARK_VERSION}/conf/spark-env.sh
+  cp ${SPARK_HOME}/conf/spark-env.sh.template ${SPARK_HOME}/conf/spark-env.sh
 fi
 
 # Create Zeppelin conf
